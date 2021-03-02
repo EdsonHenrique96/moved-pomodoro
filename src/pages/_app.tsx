@@ -1,6 +1,6 @@
 import '../styles/global.css';
 
-import { ChallengesPovider } from '../contexts/ChallengeContexts';
+import { ChallengesPovider } from '../contexts/ChallengeContext';
 
 function MyApp({ Component, pageProps }) {
   return (

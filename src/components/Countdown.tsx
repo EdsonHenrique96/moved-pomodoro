@@ -1,48 +1,19 @@
 import styles from '../styles/components/Countdown.module.css';
-import { useState, useEffect, useContext } from 'react';
-import { ChallengeContext } from '../contexts/ChallengeContexts';
-
-let timeout: NodeJS.Timeout;
+import { useContext } from 'react';
+import { CountdownContext } from '../contexts/CountdownContext';
 
 export function Countdown() {
-  const [ time, setTime ] = useState(0.05 * 60);
-  const [ isActive, setIsActive ] = useState(false);
-  const [ hasFinished, setHasFinished ] =useState(false);
-
-  const minutes =  Math.floor(time / 60);
-  const seconds = time % 60;
+  const {
+    minutes,
+    seconds,
+    hasFinished,
+    isActive,
+    startCoundown,
+    resetCountdown
+  } = useContext(CountdownContext);
 
   const [minuteLeft, minuteRight] = String(minutes).padStart(2, '0').split('');
   const [secoundLeft, secondRight] = String(seconds).padStart(2, '0').split('');
-
-  const { startNewChallenge } = useContext(ChallengeContext);
-
-  function clearCountdown() {
-    setTime(25 * 60);
-  }
-
-  function setCoundown() {
-    setIsActive(true);
-  }
-
-  function stopCountDown() {
-    clearTimeout(timeout);
-    setIsActive(false);
-
-    clearCountdown();
-  }
-
-  useEffect(() => {
-    if(isActive && time > 0) {
-      timeout = setTimeout(() => {
-        setTime(time - 1);
-      }, 1000);
-    } else if (time === 0) {
-      setHasFinished(true);
-      setIsActive(false);
-      startNewChallenge();
-    }
-  }, [isActive, time]);
 
   return(
     <div>
@@ -66,7 +37,6 @@ export function Countdown() {
             disabled
             type="button"
             className={styles.startCountdownButton}
-            onClick={stopCountDown}  
           >
             Ciclo encerrado
             <img src="icons/check-circle.svg" alt="check icon"/>
@@ -78,7 +48,7 @@ export function Countdown() {
                 <button 
                   type="button"
                   className={`${styles.startCountdownButton} ${styles.stopCountdownButton}`}
-                  onClick={stopCountDown}  
+                  onClick={resetCountdown}  
                 >
                   Encerrar o ciclo
                   <img src="icons/close.svg" alt="check icon"/>
@@ -87,7 +57,7 @@ export function Countdown() {
                   <button 
                     type="button"
                     className={styles.startCountdownButton}
-                    onClick={setCoundown}  
+                    onClick={startCoundown}  
                   >
                     Iniciar um ciclo
                     <img src="icons/play-arrow.svg" alt="check icon"/>
